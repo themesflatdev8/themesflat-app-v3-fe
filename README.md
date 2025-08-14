@@ -1,22 +1,28 @@
+# Hướng dẫn cài đặt dự án Frontend với Shopify App
 
-## Getting Started
-
-First, run the development server:
-
+## 1. Cài đặt dependencies Node.js
 ```bash
-npm run dev
-# or
-yarn dev
+npm install
 ```
 
-Second, run the build server:
-
+## 2. Tạo file `.env` từ file mẫu
 ```bash
-SHOPIFY_API_KEY=REPLACE_ME npm run build
+cp .env.example .env
 ```
 
-Final, run the build server:
-
-```bash
-npm run start
+## 3. Cấu hình các biến môi trường trong `.env`
+- Thay `ROOT_API` thành URL API backend (ví dụ: `https://your-backend.com`).
+- Thay `ROOT_URL` thành URL frontend (ví dụ: `https://your-frontend.com`).
+- Thêm `SHOPIFY_API_KEY` từ Shopify App:
 ```
+SHOPIFY_API_KEY=your_shopify_app_key
+```
+
+## 4. Chạy dự án local
+```bash
+npm start
+```
+
+## 5. Ghi chú
+- Đảm bảo backend đang chạy trước khi start frontend.
+- Kiểm tra `CORS` trên backend để cho phép frontend gọi API.
