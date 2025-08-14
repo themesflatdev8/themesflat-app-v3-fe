@@ -1,0 +1,19 @@
+// .Polaris-Select {
+//   .Polaris-Select__Backdrop {
+//     border-radius: var(--p-border-radius-100);
+//     border-color: var(--p-color-border-strong);
+//   }
+//   .Polaris-Select__Input {
+//     option[value=""] {
+//       display: none;
+//     }
+//     cursor: pointer;
+//     box-shadow: -1px 0px 20px rgba(23, 24, 24, 0.05), 0px 1px 5px rgba(0, 0, 0, 0.15);
+//     border-radius: var(--p-border-radius-200);
+//     &:focus ~ .Polaris-Select__Backdrop::after {
+//       box-shadow: unset;
+//       outline: unset;
+//       border: 2px solid var(--p-color-border-interactive-focus);
+//     }
+//   }
+// }

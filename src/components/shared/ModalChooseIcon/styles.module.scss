@@ -1,0 +1,79 @@
+.ms-modal-choose-icon-container {
+  padding: 2px 10px;
+
+  .ms-icon-container {
+    width: 100%;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    border: 0.66px solid #E3E3E3;
+    display: flex;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      margin: auto;
+      object-fit: contain;
+    }
+
+    &:global(.checked) {
+      border: 1px solid #458FFF !important;
+      box-shadow: 0px 0px 0px 2px #0AA2C04D;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: #FFFFFF80;
+
+      }
+    }
+
+    :global(.Polaris-Choice) {
+      --p-color-bg-fill-magic: #F2F7FE;
+      --p-color-text-brand-on-bg-fill: #2C6ECB;
+      position: absolute;
+      right: 2px;
+      z-index: 1;
+      cursor: pointer;
+
+      :global(.Polaris-Choice__Control) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  &:global(.payment) {
+    .ms-icon-container {
+      height: 32px;
+    }
+  }
+
+  &:global(.trust) {
+    .ms-icon-container {
+      border: unset;
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+  &:global(.polaris-icons) {
+    .ms-icon-container {
+      width: 50px;
+      height: 50px;
+
+      img {
+        width: 36px;
+        height: 36px;
+      }
+    }
+  }
+
+  input {
+    cursor: pointer;
+  }
+}

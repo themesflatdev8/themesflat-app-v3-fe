@@ -1,0 +1,12 @@
+.Polaris-Scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar{
+        width: 5px;
+        background-color: #ffffff;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--p-color-bg-primary-subdued-hover);
+        border-radius: 40px;
+    }
+}

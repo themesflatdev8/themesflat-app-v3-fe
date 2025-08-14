@@ -1,0 +1,19 @@
+.animation{
+  &--skeleton{
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+.lock-section{
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  &-has-tooltip{
+    cursor: default;
+    pointer-events: all;
+  }
+}
+
+.scrollbar{
+  @include scrollbar;
+}

@@ -1,0 +1,88 @@
+// .Polaris-Popover {
+//   .Polaris-Popover__Section {
+//     padding: 0;
+//     .Polaris-Stack__Item {
+//       &:last-child {
+//         margin: 0 0 var(--p-space-400);
+//         padding: var(--p-space-200) var(--p-space-400);
+//       }
+//     }
+//   }
+//   .Polaris-Popover__Pane {
+//     overflow-y: auto;
+//     overflow-x: hidden;
+//     .Polaris-Combobox__Listbox {
+//       padding-top: var(--p-space-600);
+//       &:has(div.Polaris-Autocomplete-MappedAction__ActionContainer) {
+//         padding-top: 0;
+//       }
+//       .Polaris-Listbox {
+//         position: relative;
+//         .Polaris-Autocomplete-MappedAction__ActionContainer {
+//           position: -webkit-sticky;
+//           position: sticky;
+//           top: 0;
+//           background: var(--p-color-bg);
+//           z-index: 1001;
+//           margin-bottom: 0;
+//           height: 54px;
+//           background-color: #FFFF;
+//           margin-top: -24px;
+//           display: flex;
+//           .Polaris-Listbox-Option {
+//             margin: auto;
+//             .Polaris-Listbox-Action {
+//               .Polaris-Listbox-TextOption {
+//                 padding: 0;
+//                 background: unset;
+//                 margin: 0;
+//                 &__Content {
+//                   cursor: default;
+//                   .Polaris-Autocomplete-MappedAction {
+//                     &__Action {
+//                       padding: 0;
+//                       border-top: unset;
+//                       color: var(--p-color-text-interactive);
+//                       margin: auto;
+//                       display: flex;
+//                       &.Polaris-Autocomplete-MappedAction--destructive {
+//                         background: unset;
+//                         color: var(--p-color-text-critical);
+//                       }
+//                       &:hover {
+//                         background: unset;
+//                       }
+//                     }
+//                   }
+//                 }
+                
+//                 &::after {
+//                   box-shadow: unset;
+//                 }
+//               }
+//             }
+//           }
+//         }
+//         .Polaris-Autocomplete__SectionWrapper {
+//           .Polaris-Listbox-Section__SectionGroup {
+//             .Polaris-Listbox-TextOption {
+//               &--disabled {
+//                 img {
+//                   opacity: 0.6;
+//                 }
+//               }
+//             }
+//             li[aria-selected="true"] {
+//               .Polaris-Listbox-TextOption {
+//                 background: var(--p-color-bg-interactive-selected);
+//               }
+//             }
+//             [data-focused]:not(:focus) .Polaris-Listbox-TextOption:not(.Polaris-Listbox-TextOption--disabled)::after {
+//               box-shadow: unset;
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }

@@ -1,0 +1,22 @@
+#PolarisPortalsContainer {
+    // .Polaris-Tooltip-TooltipOverlay__Content {
+    .Polaris-Tooltip-TooltipOverlay{
+        min-width: 0 !important;
+        min-height: 0 !important;
+        pointer-events: all;
+
+        &:empty {
+            padding: 0;
+        }
+    }
+}
+
+a,
+button,
+span {
+    &[data-polaris-tooltip-activator="true"] {
+        &.Polaris-Button--disabled {
+            pointer-events: all !important;
+        }
+    }
+}

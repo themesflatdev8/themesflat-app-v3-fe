@@ -1,0 +1,11 @@
+// export { default as notFoundImage } from "./svg/empty-state.svg";
+// export { default as trophyImage } from "./images/home-trophy.png";
+// export { default as planUpgradeImage } from "./images/plan-upgrade.png";
+// export { default as welcomeImage } from "./images/welcome.png";
+export { default as partnerFriendlyBgImage } from "./images/partner-friendly-bg.png";
+// export { default as affiliateBg } from "./images/affiliate-bg.png";
+export { default as shopifyMarketImage } from "./images/shopify-market.png";
+export { default as emptyBgImage } from "./images/empty-bg.png";
+export { default as emptySearchImage } from "./images/empty-search.png";
+export { default as bugFeatureImage } from "./images/bug-feature.png";
+export { default as newFeaturesImage } from "./images/new-features.png";

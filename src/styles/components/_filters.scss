@@ -1,0 +1,13 @@
+.Polaris-Filters {
+  .Polaris-TextField__Backdrop {
+    border-color: var(--p-color-border-strong);
+    border-radius: var(--p-border-radius-100);
+  }
+  .Polaris-TextField__Input {
+    &:focus ~ .Polaris-TextField__Backdrop::after {
+      box-shadow: unset;
+      outline: unset;
+      border: 2px solid var(--p-color-border-interactive-focus);
+    }
+  }
+}

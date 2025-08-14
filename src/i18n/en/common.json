@@ -1,0 +1,41 @@
+{
+  "home": "Tran Lam",
+  "action": "Action",
+  "buttons": {
+    "add": "Add",
+    "create": "Create",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "ok": "Ok",
+    "clear_all": "Clear all",
+    "clear_all_filter": "Clear all filters",
+    "clear_selection": "Clear selection",
+    "edit": "Edit",
+    "reset": "Reset",
+    "copied": "Copied",
+    "copy": "Copy",
+    "learn_more": "Learn more",
+    "manage": "Manage",
+    "more_actions": "More actions",
+    "need_help": "Need help?",
+    "upgrade": "Upgrade",
+    "upgrade_now": "Upgrade now",
+    "remove": "Remove",
+    "reselect": "Reselect",
+    "select": "Select",
+    "select_all": "Select all",
+    "save": "Save"
+  },
+  "unsaved_changes": "Unsaved changes",
+  "publish": "Publish",
+  "published": "Published",
+  "unpublish": "Unpublish",
+  "unpublished": "Unpublished",
+  "pin": "Pin",
+  "unpin": "Unpin",
+  "settings": "Settings",
+  "errors": {
+    "something_went_wrong": "Something went wrong"
+  },
+  "campaign": "Campaign"
+}

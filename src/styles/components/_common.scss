@@ -1,0 +1,39 @@
+.text-color {
+    color: rgba(79, 14, 31, 1);
+}
+
+.page-container {
+    .Polaris-Page {
+        .Polaris-Page-Header {
+            padding-bottom: 0;
+        }
+    }
+
+    .page-subtitle {
+        padding-bottom: var(--p-space-500);
+    }
+}
+
+.Polaris-Link:focus:not(:active) {
+    outline: unset !important;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.justify-content-end {
+    display: flex;
+    justify-content: flex-end !important;
+}
+
+.justify-content-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.align-items-center {
+    display: flex;
+    align-items: center;
+}
