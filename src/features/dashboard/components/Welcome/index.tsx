@@ -39,6 +39,7 @@ import apiBundle from "@/features/product-bundles/api";
 import { _queryKey } from "@/constants/react-query";
 import { _typeReducer } from "@/features/auth/constants";
 import { SHOPIFY_THEME_APP_EXTENSION_ID } from "@/config/env";
+import SyncDiscount from '@/features/dashboard/components/Discount/SyncDiscount';
 
 export default function SetupGuide({}) {
    return (
@@ -49,7 +50,7 @@ export default function SetupGuide({}) {
             👋 Welcome to the app!
           </Text>
         
-          
+          <SyncDiscount />
         </BlockStack>
       </Box>
     </Card>
