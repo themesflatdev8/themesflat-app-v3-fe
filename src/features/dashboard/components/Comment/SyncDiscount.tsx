@@ -3,7 +3,8 @@
 
 import { env } from 'process';
 import { useState } from 'react';
-import { getComment } from './Comment';
+import verifyAppApi from "@/api/verify-app";
+import { syncDiscount } from './discount';
 
 export default function SyncDiscount() {
   const [isSyncing, setIsSyncing] = useState(false);
@@ -16,19 +17,19 @@ export default function SyncDiscount() {
 
     try {
       // let res = await verifyAppApi.verifyAppEmbed();
-    //   let res = await syncDiscount();
-    //   console.log('Kết quả đồng bộ:', res); 
-    //   let { status = false, verify = false } = res;
+      let res = await syncDiscount();
+      console.log('Kết quả đồng bộ:', res); 
+      let { status = false, verify = false } = res;
 
-    //   if (!status) {
-    //     throw new Error('Đã xảy ra lỗi khi đồng bộ');
-    //   }
+      if (!status) {
+        throw new Error('Đã xảy ra lỗi khi đồng bộ');
+      }
 
     
-    // } catch (error) {
+    } catch (error) {
       
-    // } finally {
-    // }
+    } finally {
+    }
   };
 
   return (
