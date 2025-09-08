@@ -486,12 +486,12 @@ export default function SetupGuide({}) {
                 <Card>
                   <BlockStack gap="400">
                     <Text as="h3" variant="headingMd">
-                      Enable 'M-Sell' on your theme
+                      Enable TEST on your theme
                     </Text>
                     {!isErrorVerifyAppBlock ? (
                       <Banner tone="success">
                         <p>
-                          The 'M-Sell' element is added in your theme,
+                          The TEST element is added in your theme,
                           everything is ready here.
                         </p>
                       </Banner>
@@ -506,7 +506,7 @@ export default function SetupGuide({}) {
                     <BlockStack gap="400">
                       <BlockStack gap="200">
                         <Text as="p" variant="bodyMd">
-                          <strong>1.</strong> Click 'Enable app' below to go to
+                          <strong>1.</strong> Click  Enable app  below to go to
                           theme app page
                         </Text>
                         <Text as="p" variant="bodyMd">
@@ -527,8 +527,8 @@ export default function SetupGuide({}) {
                           <strong>Save</strong>)
                         </Text>
                         <Text as="p" variant="bodyMd">
-                          <strong>4.</strong> Click 'Verify' below to confirm
-                          it's done.
+                          <strong>4.</strong> Click  Verify  below to confirm
+                          it s done.
                         </Text>
                       </BlockStack>
                       <ButtonGroup>
@@ -571,12 +571,12 @@ export default function SetupGuide({}) {
                 <Card>
                   <BlockStack gap="300">
                     <Text as="h3" variant="headingMd">
-                      Add 'M-Sell Bundles' on your theme
+                      Add  M-Sell Bundles  on your theme
                     </Text>
                     {!isErrorVerifyAppEmbed ? (
                       <Banner tone="success">
                         <p>
-                          The 'M-Sell' element is enabled in your theme,
+                          The TEST element is enabled in your theme,
                           everything is ready here.
                         </p>
                       </Banner>
@@ -591,7 +591,7 @@ export default function SetupGuide({}) {
                     <BlockStack gap="300">
                       <BlockStack gap="200">
                         <Text as="p" variant="bodyMd">
-                          <strong>1.</strong> Click 'Enable app embeds' below to
+                          <strong>1.</strong> Click  Enable app embeds  below to
                           go to theme app page
                         </Text>
                         <Text as="p" variant="bodyMd">
@@ -604,8 +604,8 @@ export default function SetupGuide({}) {
                           <strong>Save</strong>)
                         </Text>
                         <Text as="p" variant="bodyMd">
-                          <strong>4.</strong> Click 'Verify' below to confirm
-                          it's done.
+                          <strong>4.</strong> Click  Verify  below to confirm
+                          it s done.
                         </Text>
                       </BlockStack>
                       <ButtonGroup>
@@ -691,7 +691,7 @@ export default function SetupGuide({}) {
                             }}
                           />
                           <RadioButton
-                            label="No, my theme doesn't use rounded corners"
+                            label="No, my theme doesn t use rounded corners"
                             id="corners-no"
                             name="corners"
                             checked={settings.borderRadius == 0}
@@ -733,7 +733,7 @@ export default function SetupGuide({}) {
                 <Card padding="1000">
                   <BlockStack gap="300" inlineAlign="center">
                     <Text as="h3" variant="headingMd">
-                      Now it's time to create your first{" "}
+                      Now it s time to create your first{" "}
                       {campaign == "bundle" ? "Bundle" : "Volume discount"}!
                     </Text>
                     <Image

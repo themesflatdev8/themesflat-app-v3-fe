@@ -68,9 +68,7 @@ const AppEmbedRequired = ({
             </StyledStep>
             <StyledStep>
               <Badge tone="info">2</Badge>
-              <Text variant="bodyMd" as="p">
-                Turn on the "M-Sell widgets" toggle to activate it
-              </Text>
+             
             </StyledStep>
             <StyledStep>
               <Badge tone="info">3</Badge>

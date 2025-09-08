@@ -100,7 +100,7 @@ const AppBlockRequired = ({
           <Box paddingBlockStart="500">
             <Banner tone="info">
               <Text as="p" variant="bodyMd" tone="base">
-                Note: If you are using more than one product template, ensure that you add the widget to the template assigned to the product you want to display. Otherwise, the widget won't be visible.
+                Note: If you are using more than one product template, ensure that you add the widget to the template assigned to the product you want to display. Otherwise, the widget wont be visible.
               </Text>
             </Banner>
           </Box>

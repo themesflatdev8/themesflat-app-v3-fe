@@ -189,7 +189,6 @@ const Preview = ({
               <circle
                 className="Msell-Spinner-Path"
                 fill="none"
-                stroke-width="6"
                 cx="33"
                 cy="33"
                 r="30"

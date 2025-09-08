@@ -1,7 +1,15 @@
-// src/pages/approve-domain/index.tsx
 import React, { useState } from "react";
 import axios from "axios";
-import { Page, Card, FormLayout, TextField, Button, Toast } from "@shopify/polaris";
+import {
+  Page,
+  Card,
+  FormLayout,
+  TextField,
+  Button,
+  Toast,
+  BlockStack,
+  Box,
+} from "@shopify/polaris";
 
 const ApproveDomainPage: React.FC = () => {
   const [domainName, setDomainName] = useState("");
@@ -22,16 +30,12 @@ const ApproveDomainPage: React.FC = () => {
         security,
       };
 
-      await axios({
-        url: "/api/shop/request", // endpoint POST
-        method: "POST",
-        data: payload,
+      await axios.post("/api/shop/request", payload, {
         headers: { "Content-Type": "application/json" },
       });
 
       setToastContent("Gửi thành công!");
       setToastActive(true);
-      // reset form nếu muốn
       setDomainName("");
       setEmailDomain("");
       setValidDays(30);
@@ -50,35 +54,41 @@ const ApproveDomainPage: React.FC = () => {
 
   return (
     <Page title="Duyệt Domain">
-      <Card sectioned>
-        <FormLayout>
-          <TextField
-            label="Domain"
-            value={domainName}
-            onChange={setDomainName}
-            placeholder="vd: example.com"
-          />
-          <TextField
-            label="Email Domain"
-            value={emailDomain}
-            onChange={setEmailDomain}
-            placeholder="vd: gmail.com"
-          />
-          <TextField
-            label="Valid Days"
-            type="number"
-            value={String(validDays)}
-            onChange={(val) => setValidDays(Number(val))}
-          />
-          <TextField
-            label="Security"
-            value={security}
-            onChange={setSecurity}
-          />
-          <Button primary onClick={handleSubmit} loading={loading}>
-            Submit
-          </Button>
-        </FormLayout>
+      <Card>
+        <Box padding="400">
+          <FormLayout>
+            <TextField
+             autoComplete="off"
+              label="Domain"
+              value={domainName}
+              onChange={setDomainName}
+              placeholder="vd: example.com"
+            />
+            <TextField
+             autoComplete="off"
+              label="Email Domain"
+              value={emailDomain}
+              onChange={setEmailDomain}
+              placeholder="vd: gmail.com"
+            />
+            <TextField
+              autoComplete="off"
+              label="Valid Days"
+              type="number"
+              value={String(validDays)}
+              onChange={(val) => setValidDays(Number(val))}
+            />
+            <TextField
+              autoComplete="off"
+              label="Security"
+              value={security}
+              onChange={setSecurity}
+            />
+            <Button variant="primary" onClick={handleSubmit} loading={loading}>
+              Submit
+            </Button>
+          </FormLayout>
+        </Box>
       </Card>
       {toastMarkup}
     </Page>

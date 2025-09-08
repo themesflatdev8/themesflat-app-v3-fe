@@ -7,6 +7,7 @@ import { Loading } from "@/components/core";
 import api from "@/features/auth/api";
 import { _typeReducer } from "@/features/auth/constants";
 import { _navigationMenu } from "@/constants/navigation";
+import Link from "next/link";
 
 type Props = {
   children: React.ReactNode;
@@ -32,7 +33,7 @@ const MiddlewareAuth = ({ children }: Props) => {
         dispatch({ type: _typeReducer.SET_STORE, payload: data });
 
         // Redirect nếu pending
-        if (data?.approve_domain?.status === "pending") {
+        if (store?.approve_domain?.status === "pending" || store?.approve_domain?.status === "request") {
           setRedirected(true);
           router.replace("/approve-domain");
         }
@@ -45,7 +46,7 @@ const MiddlewareAuth = ({ children }: Props) => {
   // Chặn truy cập các route khác khi pending
   useEffect(() => {
     if (
-      store?.approve_domain?.status === "pending" &&
+      (store?.approve_domain?.status === "pending" || store?.approve_domain?.status === "request") &&
       router.asPath !== "/approve-domain" &&
       !redirected
     ) {
@@ -78,9 +79,8 @@ const MiddlewareAuth = ({ children }: Props) => {
   return (
     <>
       <NavMenu>
-        <a
+        <Link
           href="/"
-          rel="home"
           onClick={(e) => {
             e.preventDefault();
             if (store?.approve_domain?.status === "pending") {
@@ -91,11 +91,15 @@ const MiddlewareAuth = ({ children }: Props) => {
           }}
         >
           Home
-        </a>
+        </Link>
         {navigation.map((item: any) => (
-          <a key={item.destination} href={item.destination} onClick={item.onClick}>
+          <Link
+            key={item.destination}
+            href={item.destination}
+            onClick={item.onClick}
+          >
             {item.label}
-          </a>
+          </Link>
         ))}
       </NavMenu>
       {children}
