@@ -414,7 +414,7 @@ const ProductBundleList = ({ pageType, onAction }: Props) => {
                     <BlockStack gap="300">
                       <Text as="p" variant="bodyMd">
                         Please enable the app by clicking the button below
-                        and then 'Save' on your theme. Our features will not
+                        and then Save on your theme. Our features will not
                         be shown until you enable.
                       </Text>
                       <div>
@@ -455,7 +455,7 @@ const ProductBundleList = ({ pageType, onAction }: Props) => {
                     <BlockStack gap="300">
                       <Text as="p" variant="bodyMd">
                         Please add block section the app by clicking the
-                        button below and then 'Save' on your theme. Our
+                        button below and then Save on your theme. Our
                         features will not be shown until you enable.
                       </Text>
                       <div>

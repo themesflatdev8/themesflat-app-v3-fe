@@ -273,7 +273,7 @@ const QuantityBreaksList = ({ onAction }: Props) => {
                 <BlockStack gap="300">
                   <Text as="p" variant="bodyMd">
                     Please enable the app by clicking the button below and
-                    then 'Save' on your theme. Our features will not be
+                    then Save on your theme. Our features will not be
                     shown until you enable.
                   </Text>
                   <div>

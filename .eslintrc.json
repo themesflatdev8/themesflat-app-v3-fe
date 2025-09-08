@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "next/babel", "next/core-web-vitals"],
+  "extends": ["next/core-web-vitals","next/core-web-vitals"],
   "rules": {
     "@next/next/no-sync-scripts": "off"
   }

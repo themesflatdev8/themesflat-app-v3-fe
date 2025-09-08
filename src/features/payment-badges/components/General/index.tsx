@@ -77,7 +77,7 @@ const General = ({
               >
                 <BlockStack gap="100">
                   <Text as="h3" variant="headingMd">Payment Badges on Product page </Text>
-                  <Text as="p" variant="bodyMd" tone="subdued">Enhance customers' confidence, help alleviate hesitations they may have about payment methods</Text>
+                  <Text as="p" variant="bodyMd" tone="subdued">Enhance customers confidence, help alleviate hesitations they may have about payment methods</Text>
                 </BlockStack>
                 <Switch
                   checked={value}

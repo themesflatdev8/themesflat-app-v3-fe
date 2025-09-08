@@ -93,7 +93,7 @@ export default function Feature({}) {
             Onboarding
           </Text>
           <Text as="p" variant="bodyMd" tone="subdued">
-            Provide you fast access to app's common functionalities
+            Provide you fast access to apps common functionalities
           </Text>
         </Box>
         <InlineGrid columns={{ xs: 1, sm: 2, md: 3, lg: 3, xl: 3 }} gap="600">

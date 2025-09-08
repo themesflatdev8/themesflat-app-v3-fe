@@ -314,7 +314,7 @@ export default function SetupGuide({}) {
                           <BlockStack gap="300">
                             <BlockStack gap="100">
                               <Text as="p" variant="bodyMd">
-                                1. Go to <strong>"App embeds"</strong> section
+                                1. Go to <strong>App embeds</strong> section
                                 of your theme settings
                               </Text>
                               <Text as="p" variant="bodyMd">

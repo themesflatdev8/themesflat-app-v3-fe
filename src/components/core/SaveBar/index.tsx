@@ -55,7 +55,6 @@ const SaveBarAppBridge = (props: SaveBarProps) => {
         <button
           disabled={isDisabledBtnSave}
           loading={isLoading ? "" : undefined}
-          variant="primary"
           onClick={onSave}
         ></button>
         <button

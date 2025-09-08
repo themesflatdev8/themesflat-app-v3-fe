@@ -45,7 +45,6 @@ export default function TemplatePopular({
             >
               <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
                 <path
-                  fill-rule="evenodd"
                   clipRule="evenodd"
                   d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
                 ></path>
@@ -64,7 +63,6 @@ export default function TemplatePopular({
             >
               <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
                 <path
-                  fill-rule="evenodd"
                   clipRule="evenodd"
                   d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z"
                 ></path>
@@ -107,7 +105,6 @@ export default function TemplatePopular({
                   <circle
                     className="Msell-Spinner-Path"
                     fill="none"
-                    stroke-width="6"
                     cx="33"
                     cy="33"
                     r="30"
