@@ -47,5 +47,6 @@ export default {
   VOLUME_DISCOUNTS_CUSTOMIZATION: "/customization/volume-discounts",
   BUNDLE_CUSTOMIZATION: "/customization/product-bundles",
   CONTACT: "/partner-friendly",
-  FEATURES: "/features"
+  FEATURES: "/features",
+  REVIEWS: "/reviews"
 };
