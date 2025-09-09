@@ -13,9 +13,10 @@ import {
   Frame,
   Icon,
   useIndexResourceState,
-  Modal,
-  TextField,
+  ButtonGroup,
 } from "@shopify/polaris";
+import type { IndexTableProps } from "@shopify/polaris";
+import type { Range } from "@shopify/polaris/build/ts/src/utilities/index-provider";
 import { EditIcon, DeleteIcon, CheckIcon } from "@shopify/polaris-icons";
 import axios from "@/utils/axios";
 import { Container } from "@/components/core";
@@ -32,6 +33,10 @@ interface Review {
   [key: string]: unknown;
 }
 
+type SelectionType = Parameters<
+  NonNullable<IndexTableProps["onSelectionChange"]>
+>[0];
+
 const ProductReviewsPage = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -46,7 +51,48 @@ const ProductReviewsPage = () => {
   const [toastContent, setToastContent] = useState("");
   const toggleToast = useCallback(() => setToastActive(false), []);
 
-  // --- FETCH REVIEWS ---
+  const [unselected, setUnselected] = useState<string[]>([]);
+
+  const {
+    selectedResources,
+    allResourcesSelected,
+    handleSelectionChange,
+    clearSelection,
+  } = useIndexResourceState(reviews);
+
+  const [selectAcrossPages, setSelectAcrossPages] = useState(false);
+
+  // ✅ custom handle selection
+  const customHandleSelectionChange = (
+    selectionType: SelectionType,
+    toggleType: boolean,
+    selection?: string | Range,
+    position?: number
+  ) => {
+    if (selectionType === "page") {
+      handleSelectionChange(selectionType, toggleType, selection, position);
+      setSelectAcrossPages(false);
+      setUnselected([]);
+      return;
+    }
+
+    if (
+      selectAcrossPages &&
+      selectionType === "single" &&
+      typeof selection === "string"
+    ) {
+      const id = selection;
+      if (toggleType) {
+        setUnselected((prev) => prev.filter((x) => x !== id));
+      } else {
+        setUnselected((prev) => (prev.includes(id) ? prev : [...prev, id]));
+      }
+      return;
+    }
+
+    handleSelectionChange(selectionType, toggleType, selection, position);
+  };
+
   const fetchProductReviews = async () => {
     if (!id) return;
     try {
@@ -68,7 +114,7 @@ const ProductReviewsPage = () => {
           created_at: r.created_at || "",
         }))
       );
-      setTotal(res.data?.total || apiData.length);
+      setTotal(res.data?.total ?? apiData.length);
     } catch (err) {
       console.error("Failed to fetch product reviews", err);
     } finally {
@@ -78,92 +124,63 @@ const ProductReviewsPage = () => {
 
   useEffect(() => {
     fetchProductReviews();
+    clearSelection();
+    setUnselected([]);
+    setSelectAcrossPages(false);
   }, [id, page]);
 
-  // --- UPDATE STATUS (SINGLE) ---
-  const handleStatusChange = async (
-    reviewId: string,
-    status: "approved" | "pending"
-  ) => {
+  const handleBulkAction = async (action: "approved" | "pending" | "delete") => {
     try {
-      await axios.post(`/review/bulk-action`, {
-        action: status,
-        select_all: false,
-        unselected: [],
-        ids: [reviewId],
-      });
+      let payload: any = { action };
 
-      setReviews((prev) =>
-        prev.map((r) => (r.id === reviewId ? { ...r, status } : r))
-      );
-      setToastContent("Update success");
+      if (selectAcrossPages) {
+        payload.select_all = true;
+        payload.unselected = unselected;
+        payload.ids = [];
+      } else if (allResourcesSelected) {
+        payload.ids = reviews.map((r) => r.id);
+        payload.select_all = false;
+        payload.unselected = [];
+      } else {
+        payload.ids = selectedResources;
+        payload.select_all = false;
+        payload.unselected = [];
+      }
+
+      await axios.post(`/review/bulk-action`, payload);
+
+      if (action === "delete") {
+        setReviews((prev) =>
+          prev.filter((r) => {
+            const isSelected =
+              payload.select_all
+                ? !payload.unselected.includes(r.id)
+                : payload.ids.includes(r.id);
+            return !isSelected;
+          })
+        );
+      } else {
+        setReviews((prev) =>
+          prev.map((r) => {
+            const isSelected =
+              payload.select_all
+                ? !payload.unselected.includes(r.id)
+                : payload.ids.includes(r.id);
+            return isSelected ? { ...r, status: action } : r;
+          })
+        );
+      }
+
+      setToastContent("Bulk action success");
       setToastActive(true);
+
+      clearSelection();
+      setUnselected([]);
+      setSelectAcrossPages(false);
     } catch (err) {
       console.error(err);
-    }
-  };
-
-  // --- DELETE SINGLE REVIEW ---
-  const [deleteModalActive, setDeleteModalActive] = useState(false);
-  const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
-
-  const openDeleteModal = (reviewId: string) => {
-    setReviewToDelete(reviewId);
-    setDeleteModalActive(true);
-  };
-
-  const confirmDelete = async () => {
-    if (!reviewToDelete) return;
-    try {
-      await axios.post(`/review/bulk-action`, {
-        action: "delete",
-        select_all: false,
-        unselected: [],
-        ids: [reviewToDelete],
-      });
-      setReviews((prev) => prev.filter((r) => r.id !== reviewToDelete));
-      setToastContent("Delete success");
+      setToastContent("Bulk action failed");
       setToastActive(true);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setDeleteModalActive(false);
-      setReviewToDelete(null);
-    }
-  };
-
-  // --- EDIT MODAL ---
-  const [editModalActive, setEditModalActive] = useState(false);
-  const [editReview, setEditReview] = useState<Review | null>(null);
-
-  const openEditModal = (review: Review) => {
-    setEditReview(review);
-    setEditModalActive(true);
-  };
-
-  const closeEditModal = () => {
-    setEditModalActive(false);
-    setEditReview(null);
-  };
-
-  const handleEditSave = async () => {
-    if (!editReview) return;
-    try {
-      await axios.post(`/review/update/${editReview.id}`, {
-        rating: editReview.rating,
-        review_title: editReview.review_title,
-        review_text: editReview.review_text,
-      });
-
-      setReviews((prev) =>
-        prev.map((r) => (r.id === editReview.id ? editReview : r))
-      );
-
-      setToastContent("Review updated successfully");
-      setToastActive(true);
-      closeEditModal();
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -175,7 +192,10 @@ const ProductReviewsPage = () => {
         <Page
           fullWidth
           title={`Reviews for Product #${id}`}
-          backAction={{ content: "Back", onAction: () => router.push("/reviews") }}
+          backAction={{
+            content: "Back",
+            onAction: () => router.push("/reviews"),
+          }}
         >
           <Card>
             {loading ? (
@@ -190,10 +210,66 @@ const ProductReviewsPage = () => {
               </div>
             ) : (
               <>
+                {(selectedResources.length > 0 ||
+                  allResourcesSelected ||
+                  selectAcrossPages) && (
+                  <div className="flex justify-between items-center px-4 py-2 border-b border-gray-200 bg-gray-50">
+                    <div className="flex items-center gap-4">
+                      <Button
+                        size="slim"
+                        variant="plain"
+                        onClick={() => {
+                          clearSelection();
+                          setUnselected([]);
+                          setSelectAcrossPages(false);
+                        }}
+                      >
+                        Clear selection
+                      </Button>
+                    </div>
+                    <ButtonGroup>
+                      <Button onClick={() => handleBulkAction("approved")}>
+                        Approve
+                      </Button>
+                      <Button onClick={() => handleBulkAction("pending")}>
+                        Set Pending
+                      </Button>
+                      <Button
+                        tone="critical"
+                        onClick={() => handleBulkAction("delete")}
+                      >
+                        Delete
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                )}
+
+                {/* ✅ Nút Select All */}
+                <div className="flex justify-start px-4 py-3">
+                  <Button
+                    size="slim"
+                    variant="plain"
+                    onClick={() => {
+                      setSelectAcrossPages(true);
+                      setUnselected([]);
+                    }}
+                  >
+                    Select All
+                  </Button>
+                </div>
+
                 <IndexTable
                   resourceName={resourceName}
                   itemCount={total}
-                  selectable={false} // 👈 tắt chọn nhiều
+                  selectedItemsCount={
+                    selectAcrossPages
+                      ? "All"
+                      : allResourcesSelected
+                      ? selectedResources.length
+                      : selectedResources.length
+                  }
+                  onSelectionChange={customHandleSelectionChange}
+                  bulkActions={[]}
                   headings={[
                     { title: "User Name" },
                     { title: "Is Replace" },
@@ -205,51 +281,54 @@ const ProductReviewsPage = () => {
                     { title: "Manage Review" },
                   ]}
                 >
-                  {reviews.map((r, index) => (
-                    <IndexTable.Row id={r.id} key={r.id} position={index}>
-                      <IndexTable.Cell>{r.user_name}</IndexTable.Cell>
-                      <IndexTable.Cell>
-                        {r.parent_id ? (
-                          <Icon source={CheckIcon} tone="success" />
-                        ) : (
-                          "-"
-                        )}
-                      </IndexTable.Cell>
-                      <IndexTable.Cell>{r.review_title}</IndexTable.Cell>
-                      <IndexTable.Cell>{r.review_text}</IndexTable.Cell>
-                      <IndexTable.Cell>{r.rating} ⭐</IndexTable.Cell>
-                      <IndexTable.Cell>
-                        <Select
-                         label="Status"
-                          options={[
-                            { label: "Approved", value: "approved" },
-                            { label: "Pending", value: "pending" },
-                          ]}
-                          value={r.status}
-                          onChange={(value) =>
-                            handleStatusChange(
-                              r.id,
-                              value as "approved" | "pending"
-                            )
-                          }
-                        />
-                      </IndexTable.Cell>
-                      <IndexTable.Cell>{r.created_at}</IndexTable.Cell>
-                      <IndexTable.Cell>
-                        <div className="flex gap-2">
-                          <Button
-                            icon={EditIcon}
-                            onClick={() => openEditModal(r)}
+                  {reviews.map((r, index) => {
+                    const rowSelected = selectAcrossPages
+                      ? !unselected.includes(r.id)
+                      : allResourcesSelected
+                      ? selectedResources.includes(r.id)
+                      : selectedResources.includes(r.id);
+
+                    return (
+                      <IndexTable.Row
+                        id={r.id}
+                        key={r.id}
+                        position={index}
+                        selected={rowSelected}
+                      >
+                        <IndexTable.Cell>{r.user_name}</IndexTable.Cell>
+                        <IndexTable.Cell>
+                          {r.parent_id ? (
+                            <Icon source={CheckIcon} tone="success" />
+                          ) : (
+                            "-"
+                          )}
+                        </IndexTable.Cell>
+                        <IndexTable.Cell>{r.review_title}</IndexTable.Cell>
+                        <IndexTable.Cell>{r.review_text}</IndexTable.Cell>
+                        <IndexTable.Cell>{r.rating} ⭐</IndexTable.Cell>
+                        <IndexTable.Cell>
+                          <Select
+                            label=""
+                            options={[
+                              { label: "Approved", value: "approved" },
+                              { label: "Pending", value: "pending" },
+                            ]}
+                            value={r.status}
+                            onChange={(value) =>
+                              handleBulkAction(value as "approved" | "pending")
+                            }
                           />
-                          <Button
-                            icon={DeleteIcon}
-                            tone="critical"
-                            onClick={() => openDeleteModal(r.id)}
-                          />
-                        </div>
-                      </IndexTable.Cell>
-                    </IndexTable.Row>
-                  ))}
+                        </IndexTable.Cell>
+                        <IndexTable.Cell>{r.created_at}</IndexTable.Cell>
+                        <IndexTable.Cell>
+                          <div className="flex gap-2">
+                            <Button icon={EditIcon} onClick={() => {}} />
+                            <Button icon={DeleteIcon} onClick={() => {}} />
+                          </div>
+                        </IndexTable.Cell>
+                      </IndexTable.Row>
+                    );
+                  })}
                 </IndexTable>
 
                 <div className="flex justify-center p-4">
@@ -265,83 +344,7 @@ const ProductReviewsPage = () => {
           </Card>
         </Page>
 
-        {toastActive && (
-          <Toast content={toastContent} onDismiss={toggleToast} />
-        )}
-
-        {/* Edit Modal */}
-        {editModalActive && editReview && (
-          <Modal
-            open={editModalActive}
-            onClose={closeEditModal}
-            title="Edit Review"
-            primaryAction={{
-              content: "Save",
-              onAction: handleEditSave,
-            }}
-            secondaryActions={[{ content: "Cancel", onAction: closeEditModal }]}
-          >
-            <Modal.Section>
-              <div className="space-y-4">
-                <TextField
-                  label="Review Title"
-                  value={editReview.review_title}
-                  onChange={(val) =>
-                    setEditReview({ ...editReview, review_title: val })
-                  }
-                  autoComplete="off"
-                />
-
-                <TextField
-                  label="Review Content"
-                  value={editReview.review_text}
-                  onChange={(val) =>
-                    setEditReview({ ...editReview, review_text: val })
-                  }
-                  multiline={4}
-                  autoComplete="off"
-                />
-
-                <Select
-                  label="Rating"
-                  options={[
-                    { label: "1 ⭐", value: "1" },
-                    { label: "2 ⭐⭐", value: "2" },
-                    { label: "3 ⭐⭐⭐", value: "3" },
-                    { label: "4 ⭐⭐⭐⭐", value: "4" },
-                    { label: "5 ⭐⭐⭐⭐⭐", value: "5" },
-                  ]}
-                  value={String(editReview.rating)}
-                  onChange={(val) =>
-                    setEditReview({ ...editReview, rating: Number(val) })
-                  }
-                />
-              </div>
-            </Modal.Section>
-          </Modal>
-        )}
-
-        {/* Confirm Delete Modal */}
-        {deleteModalActive && (
-          <Modal
-            open={deleteModalActive}
-            onClose={() => setDeleteModalActive(false)}
-            title="Confirm Delete"
-            primaryAction={{
-              content: "Delete",
-              destructive: true,
-              onAction: confirmDelete,
-            }}
-            secondaryActions={[
-              { content: "Cancel", onAction: () => setDeleteModalActive(false) },
-            ]}
-          >
-            <Modal.Section>
-              <Text as="p">Are you sure you want to delete this review?</Text>
-
-            </Modal.Section>
-          </Modal>
-        )}
+        {toastActive && <Toast content={toastContent} onDismiss={toggleToast} />}
       </Frame>
     </Container>
   );
