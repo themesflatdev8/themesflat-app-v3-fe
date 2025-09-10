@@ -33,14 +33,12 @@ const ReviewPageManage: NextPage = () => {
     try {
       setLoading(true);
       const res = await axios.get("/review");
-      console.log("API response:", res.data);
 
       const items =
         res.data?.map((p: ProductReviewSummary) => ({
           ...p,
           id: p.product_id.toString(), // Polaris yêu cầu id dạng string
         })) || [];
-      console.log("Mapped products:", items);
 
       setProducts(items);
     } catch (err) {

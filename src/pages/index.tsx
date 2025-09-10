@@ -6,17 +6,23 @@ import _routes from "@/constants/routes";
 import Welcome from "@/features/dashboard/components/Welcome";
 import { Container } from "@/components/core";
 import { useAuthContext } from "@/features/auth/contexts";
+import SyncDiscount from '@/features/dashboard/components/Discount/SyncDiscount';
 
 const HomePage: NextPage = () => {
   const router = useRouter();
   const [{ store }]: any = useAuthContext();
 
   return (
+    
     <Container size="lg">
+
       <Page fullWidth title="Dashboard">
+                      <SyncDiscount />
+
         <BlockStack gap="400">
-          {/* <SetupGuide></SetupGuide> */}
           <Welcome></Welcome>
+
+          {/* <SetupGuide></SetupGuide> */}
 
           {/* <Feature></Feature> */}
 
