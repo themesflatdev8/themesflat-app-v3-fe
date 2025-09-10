@@ -13,12 +13,12 @@ export default function SyncDiscount() {
   
   const handleSync = async () => {
     setIsSyncing(true);
-    setSyncStatus('Đang đồng bộ...');
+    setSyncStatus('Syncing...');
 
     try {
       // let res = await verifyAppApi.verifyAppEmbed();
       let res = await syncDiscount();
-      console.log('Kết quả đồng bộ:', res); 
+      // console.log('Kết quả đồng bộ:', res); 
       let { status = false, verify = false } = res;
 
       if (!status) {
@@ -47,7 +47,7 @@ export default function SyncDiscount() {
           borderRadius: '4px',
         }}
       >
-        {isSyncing ? 'Đang đồng bộ...' : 'Đồng bộ ngay'}
+        {isSyncing ? 'Syncing...' : 'Sync now'}
       </button>
       {syncStatus && (
         <p style={{ marginTop: '10px', color: syncStatus.includes('Lỗi') ? 'red' : 'green' }}>
