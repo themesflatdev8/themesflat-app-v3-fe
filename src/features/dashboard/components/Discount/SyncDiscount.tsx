@@ -1,59 +1,93 @@
-// src/features/dashboard/components/SyncDiscount.jsx
 'use client';
 
-import { env } from 'process';
-import { useState } from 'react';
-import verifyAppApi from "@/api/verify-app";
-import { syncDiscount } from './discount';
+import { useEffect, useState } from 'react';
+import Pusher from 'pusher-js';
+import axios from '@/utils/axios';
+import { useAuthContext } from "@/features/auth/contexts";
+import {
+  Frame,
+  Toast,
+  Button,
+  Card,
+  Text,
+  Page,
+  BlockStack,
+  Box,
+} from "@shopify/polaris";
+
+// API call
+const syncDiscount = () => axios.post("discount/sync");
 
 export default function SyncDiscount() {
   const [isSyncing, setIsSyncing] = useState(false);
-  const [syncStatus, setSyncStatus] = useState('');
+  const [toast, setToast] = useState<{ active: boolean; content: string }>({
+    active: false,
+    content: '',
+  });
+  const [{ store }]: any = useAuthContext();
 
-  
+  useEffect(() => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY || '', {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER || 'ap1',
+    });
+
+    const channel = pusher.subscribe(`list-syncing-${store?.shop_id}`);
+    channel.bind('sync-completed', (data: any) => {
+      setIsSyncing(false);
+      setToast({
+        active: true,
+        content: data.message || 'Discounts synced successfully 🎉',
+      });
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [store?.shop_id]);
+
   const handleSync = async () => {
     setIsSyncing(true);
-    setSyncStatus('Syncing...');
-
+    setToast({ active: true, content: 'Syncing in progress...' });
     try {
-      // let res = await verifyAppApi.verifyAppEmbed();
-      let res = await syncDiscount();
-      // console.log('Kết quả đồng bộ:', res); 
-      let { status = false, verify = false } = res;
-
-      if (!status) {
-        throw new Error('Đã xảy ra lỗi khi đồng bộ');
-      }
-
-    
-    } catch (error) {
-      
-    } finally {
+      await syncDiscount();
+    } catch {
+      setIsSyncing(false);
+      setToast({ active: true, content: 'Failed to sync discounts ❌' });
     }
   };
 
   return (
-    <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <button
-        onClick={handleSync}
-        // disabled={isSyncing}
-        style={{
-          padding: '10px 20px',
-          fontSize: '16px',
-          cursor: isSyncing ? 'not-allowed' : 'pointer',
-          backgroundColor: isSyncing ? '#ccc' : '#0070f3',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-        }}
-      >
-        {isSyncing ? 'Syncing...' : 'Sync now'}
-      </button>
-      {syncStatus && (
-        <p style={{ marginTop: '10px', color: syncStatus.includes('Lỗi') ? 'red' : 'green' }}>
-          {syncStatus}
-        </p>
+    <Frame>
+      <Page>
+        <Card>
+          <Box maxWidth="500px"  padding="600">
+            <BlockStack gap="400" align="center">
+              <Text variant="headingLg" as="h2">
+                Keep your discounts up-to-date
+              </Text>
+              <Text variant="bodyMd" as="p" tone="subdued">
+                Sync discounts with your Shopify store in just one click.
+              </Text>
+              <Button
+                size="large"
+                onClick={handleSync}
+                loading={isSyncing}
+                disabled={isSyncing}
+              >
+                {isSyncing ? 'Syncing…' : 'Sync now'}
+              </Button>
+            </BlockStack>
+          </Box>
+        </Card>
+      </Page>
+
+      {toast.active && (
+        <Toast
+          content={toast.content}
+          onDismiss={() => setToast({ active: false, content: '' })}
+        />
       )}
-    </div>
+    </Frame>
   );
 }

@@ -48,9 +48,9 @@ export default function SetupGuide({}) {
         <BlockStack gap="300" align="center">
           <Text variant="headingLg" as="h2">
             👋 Welcome to the app!
+
           </Text>
         
-          <SyncDiscount />
         </BlockStack>
       </Box>
     </Card>
