@@ -39,7 +39,7 @@ type SelectionType = Parameters<
   NonNullable<IndexTableProps["onSelectionChange"]>
 >[0];
 
-const MAX_LENGTH = 60; // giới hạn ký tự hiển thị trước khi rút gọn
+const MAX_LENGTH = 60;
 
 const ProductReviewsPage = () => {
   const router = useRouter();
@@ -64,11 +64,9 @@ const ProductReviewsPage = () => {
   } = useIndexResourceState(reviews);
   const [selectAcrossPages, setSelectAcrossPages] = useState(false);
 
-  // Modal delete
   const [deleteModalActive, setDeleteModalActive] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  // Modal content
   const [contentModalActive, setContentModalActive] = useState(false);
   const [contentModalText, setContentModalText] = useState("");
 
@@ -162,21 +160,26 @@ const ProductReviewsPage = () => {
   }, [id, page]);
 
   const handleBulkAction = async (action: "approved" | "pending" | "delete") => {
+    if (!id) return;
+
     try {
-      let payload: any = { action };
+      let payload: any = { action, product_id: id };
 
       if (selectAcrossPages) {
         payload.select_all = true;
         payload.unselected = unselected;
-        payload.ids = [];
-      } else if (allResourcesSelected) {
-        payload.ids = reviews.map((r) => r.id);
-        payload.select_all = false;
-        payload.unselected = [];
+        payload.selected = [];
       } else {
-        payload.ids = selectedResources;
+        // Chỉ lấy những review được tick
         payload.select_all = false;
         payload.unselected = [];
+        payload.selected = selectedResources;
+      }
+
+      if (!payload.select_all && payload.selected.length === 0) {
+        setToastContent("No reviews selected");
+        setToastActive(true);
+        return;
       }
 
       await axios.post(`/review/bulk-action`, payload);
@@ -186,7 +189,7 @@ const ProductReviewsPage = () => {
           prev.filter((r) => {
             const isSelected = payload.select_all
               ? !payload.unselected.includes(r.id)
-              : payload.ids.includes(r.id);
+              : payload.selected.includes(r.id);
             return !isSelected;
           })
         );
@@ -195,7 +198,7 @@ const ProductReviewsPage = () => {
           prev.map((r) => {
             const isSelected = payload.select_all
               ? !payload.unselected.includes(r.id)
-              : payload.ids.includes(r.id);
+              : payload.selected.includes(r.id);
             return isSelected ? { ...r, status: action } : r;
           })
         );
@@ -218,8 +221,13 @@ const ProductReviewsPage = () => {
     reviewId: string,
     status: "approved" | "pending"
   ) => {
+    if (!id) return;
+
     try {
-      await axios.post(`/review/update-status/${reviewId}`, { status });
+      await axios.post(`/review/update-status/${reviewId}`, {
+        status,
+        product_id: id,
+      });
       setReviews((prev) =>
         prev.map((r) => (r.id === reviewId ? { ...r, status } : r))
       );
@@ -260,10 +268,7 @@ const ProductReviewsPage = () => {
         <Page
           fullWidth
           title={`Reviews for Product #${id}`}
-          backAction={{
-            content: "Back",
-            onAction: () => router.push("/reviews"),
-          }}
+          backAction={{ content: "Back", onAction: () => router.push("/reviews") }}
         >
           <Card>
             {loading ? (
@@ -327,11 +332,7 @@ const ProductReviewsPage = () => {
                   resourceName={resourceName}
                   itemCount={total}
                   selectedItemsCount={
-                    selectAcrossPages
-                      ? "All"
-                      : allResourcesSelected
-                      ? selectedResources.length
-                      : selectedResources.length
+                    selectAcrossPages ? "All" : selectedResources.length
                   }
                   onSelectionChange={customHandleSelectionChange}
                   bulkActions={[]}
@@ -348,8 +349,6 @@ const ProductReviewsPage = () => {
                   {reviews.map((r, index) => {
                     const rowSelected = selectAcrossPages
                       ? !unselected.includes(r.id)
-                      : allResourcesSelected
-                      ? selectedResources.includes(r.id)
                       : selectedResources.includes(r.id);
 
                     return (
@@ -377,10 +376,7 @@ const ProductReviewsPage = () => {
                             ]}
                             value={r.status}
                             onChange={(value) =>
-                              handleSingleStatusChange(
-                                r.id,
-                                value as "approved" | "pending"
-                              )
+                              handleSingleStatusChange(r.id, value as "approved" | "pending")
                             }
                           />
                         </IndexTable.Cell>
@@ -410,7 +406,6 @@ const ProductReviewsPage = () => {
           </Card>
         </Page>
 
-        {/* Modal Confirm Delete */}
         <Modal
           open={deleteModalActive}
           onClose={() => setDeleteModalActive(false)}
@@ -420,12 +415,7 @@ const ProductReviewsPage = () => {
             destructive: true,
             onAction: handleConfirmDelete,
           }}
-          secondaryActions={[
-            {
-              content: "Cancel",
-              onAction: () => setDeleteModalActive(false),
-            },
-          ]}
+          secondaryActions={[{ content: "Cancel", onAction: () => setDeleteModalActive(false) }]}
         >
           <Modal.Section>
             <Text variant="bodyMd" as="p">
@@ -434,20 +424,14 @@ const ProductReviewsPage = () => {
           </Modal.Section>
         </Modal>
 
-        {/* Modal full content */}
         <Modal
           open={contentModalActive}
           onClose={() => setContentModalActive(false)}
           title="Full content"
-          primaryAction={{
-            content: "Close",
-            onAction: () => setContentModalActive(false),
-          }}
+          primaryAction={{ content: "Close", onAction: () => setContentModalActive(false) }}
         >
           <Modal.Section>
-            <Text variant="bodyMd" as="p">
-              {contentModalText}
-            </Text>
+            <Text variant="bodyMd" as="p">{contentModalText}</Text>
           </Modal.Section>
         </Modal>
 
