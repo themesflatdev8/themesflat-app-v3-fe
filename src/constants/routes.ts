@@ -48,5 +48,6 @@ export default {
   BUNDLE_CUSTOMIZATION: "/customization/product-bundles",
   CONTACT: "/partner-friendly",
   FEATURES: "/features",
-  REVIEWS: "/reviews"
+  REVIEWS: "/reviews",
+  DISCOUNTS: "/discounts"
 };
