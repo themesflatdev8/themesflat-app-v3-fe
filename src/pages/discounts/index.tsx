@@ -53,6 +53,8 @@ const parseCode = (codes?: string) => {
 const renderStatusBadge = (status?: number | string) => {
   if (status === 1 || status === '1') return <Badge tone="success">Active</Badge>;
   if (status === 2 || status === '2') return <Badge tone="critical">Expired</Badge>;
+  if (status === 3 || status === '3') return <Badge tone="success">Schedule</Badge>;
+  if (status === 0 || status === 'o') return <Badge tone="critical">Disable</Badge>;
   return <Badge>{String(status ?? '-')}</Badge>;
 };
 
