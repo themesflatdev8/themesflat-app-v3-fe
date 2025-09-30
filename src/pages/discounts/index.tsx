@@ -86,7 +86,7 @@ const DiscountPageManage: NextPage = () => {
         params: {
           status: statusFilter !== "all" ? statusFilter : undefined,
           keyword: keyword || undefined,
-          limit:2
+          limit:10
         }
       });
       const discounts: Discount[] =
