@@ -224,7 +224,7 @@ const ProductReviewsPage = () => {
     if (!id) return;
 
     try {
-      await axios.post(`/review/update-status/${reviewId}`, {
+      await axios.post(`/review/update/${reviewId}`, {
         status,
         product_id: id,
       });
