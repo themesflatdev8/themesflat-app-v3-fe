@@ -11,7 +11,6 @@ import {
   Pagination,
   Toast,
   Frame,
-  Icon,
   useIndexResourceState,
   ButtonGroup,
   Modal,
@@ -66,6 +65,8 @@ const ProductReviewsPage = () => {
 
   const [deleteModalActive, setDeleteModalActive] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const [bulkDeleteModalActive, setBulkDeleteModalActive] = useState(false);
 
   const [contentModalActive, setContentModalActive] = useState(false);
   const [contentModalText, setContentModalText] = useState("");
@@ -170,7 +171,6 @@ const ProductReviewsPage = () => {
         payload.unselected = unselected;
         payload.selected = [];
       } else {
-        // Chỉ lấy những review được tick
         payload.select_all = false;
         payload.unselected = [];
         payload.selected = selectedResources;
@@ -307,7 +307,7 @@ const ProductReviewsPage = () => {
                       </Button>
                       <Button
                         tone="critical"
-                        onClick={() => handleBulkAction("delete")}
+                        onClick={() => setBulkDeleteModalActive(true)}
                       >
                         Delete
                       </Button>
@@ -376,7 +376,10 @@ const ProductReviewsPage = () => {
                             ]}
                             value={r.status}
                             onChange={(value) =>
-                              handleSingleStatusChange(r.id, value as "approved" | "pending")
+                              handleSingleStatusChange(
+                                r.id,
+                                value as "approved" | "pending"
+                              )
                             }
                           />
                         </IndexTable.Cell>
@@ -406,6 +409,7 @@ const ProductReviewsPage = () => {
           </Card>
         </Page>
 
+        {/* Modal delete single */}
         <Modal
           open={deleteModalActive}
           onClose={() => setDeleteModalActive(false)}
@@ -415,7 +419,9 @@ const ProductReviewsPage = () => {
             destructive: true,
             onAction: handleConfirmDelete,
           }}
-          secondaryActions={[{ content: "Cancel", onAction: () => setDeleteModalActive(false) }]}
+          secondaryActions={[
+            { content: "Cancel", onAction: () => setDeleteModalActive(false) },
+          ]}
         >
           <Modal.Section>
             <Text variant="bodyMd" as="p">
@@ -424,14 +430,43 @@ const ProductReviewsPage = () => {
           </Modal.Section>
         </Modal>
 
+        {/* Modal delete bulk */}
+        <Modal
+          open={bulkDeleteModalActive}
+          onClose={() => setBulkDeleteModalActive(false)}
+          title="Delete selected reviews"
+          primaryAction={{
+            content: "Delete",
+            destructive: true,
+            onAction: async () => {
+              await handleBulkAction("delete");
+              setBulkDeleteModalActive(false);
+            },
+          }}
+          secondaryActions={[
+            { content: "Cancel", onAction: () => setBulkDeleteModalActive(false) },
+          ]}
+        >
+          <Modal.Section>
+            <Text variant="bodyMd" as="p">
+              Are you sure you want to delete the selected reviews? This action cannot be undone.
+            </Text>
+          </Modal.Section>
+        </Modal>
+
         <Modal
           open={contentModalActive}
           onClose={() => setContentModalActive(false)}
           title="Full content"
-          primaryAction={{ content: "Close", onAction: () => setContentModalActive(false) }}
+          primaryAction={{
+            content: "Close",
+            onAction: () => setContentModalActive(false),
+          }}
         >
           <Modal.Section>
-            <Text variant="bodyMd" as="p">{contentModalText}</Text>
+            <Text variant="bodyMd" as="p">
+              {contentModalText}
+            </Text>
           </Modal.Section>
         </Modal>
 
