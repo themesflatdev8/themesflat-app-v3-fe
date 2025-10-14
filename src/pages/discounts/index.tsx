@@ -30,6 +30,7 @@ interface Discount {
   codes?: string;
   starts_at?: string | null;
   ends_at?: string | null;
+  created_at?: string | number | null;
 }
 
 // Helpers
@@ -54,7 +55,7 @@ const renderStatusBadge = (status?: number | string) => {
   if (status === 1 || status === '1') return <Badge tone="success">Active</Badge>;
   if (status === 2 || status === '2') return <Badge tone="critical">Expired</Badge>;
   if (status === 3 || status === '3') return <Badge tone="success">Schedule</Badge>;
-  if (status === 0 || status === 'o') return <Badge tone="critical">Disable</Badge>;
+  if (status === 0 || status === '0') return <Badge tone="critical">Disable</Badge>;
   return <Badge>{String(status ?? '-')}</Badge>;
 };
 
@@ -77,6 +78,7 @@ const DiscountPageManage: NextPage = () => {
   ]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [keyword, setKeyword] = useState<string>('');
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   const syncTimeoutRef = useRef<number | null>(null);
 
@@ -86,14 +88,34 @@ const DiscountPageManage: NextPage = () => {
     try {
       const res = await axios.get('/discount', {
         params: {
-          status: statusFilter !== "all" ? statusFilter : undefined,
+          status: statusFilter !== 'all' ? statusFilter : undefined,
           keyword: keyword || undefined,
-          limit:10
-        }
+          limit: 10,
+        },
       });
       const discounts: Discount[] =
         res?.data?.data?.data || res?.data?.data || res?.data || [];
       setData(discounts);
+
+      // 🕒 Tính thời gian tạo mới nhất (last updated) theo giờ trình duyệt
+      const timestamps = discounts
+        .map((d) => {
+          const t = d.created_at;
+          if (!t) return null;
+          if (!isNaN(Number(t))) return Number(t) * 1000; // UNIX timestamp
+          return new Date(t).getTime();
+        })
+        .filter(Boolean) as number[];
+
+      if (timestamps.length > 0) {
+        const latest = new Date(Math.max(...timestamps));
+        const offsetHours = -latest.getTimezoneOffset() / 60;
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        const formatted = `${pad(latest.getHours())}:${pad(latest.getMinutes())}:${pad(latest.getSeconds())} GMT${offsetHours >= 0 ? '+' : ''}${offsetHours} ${pad(latest.getDate())}-${pad(latest.getMonth() + 1)}-${latest.getFullYear()}`;
+        setLastUpdated(formatted);
+      } else {
+        setLastUpdated(null);
+      }
 
       // lấy options filter từ API nếu có
       if (res?.data?.meta?.statuses) {
@@ -106,6 +128,7 @@ const DiscountPageManage: NextPage = () => {
     } catch (err) {
       console.error('Failed to fetch discounts:', err);
       setData([]);
+      setLastUpdated(null);
     } finally {
       setLoading(false);
     }
@@ -231,7 +254,7 @@ const DiscountPageManage: NextPage = () => {
                   value={statusFilter}
                 />
                 <TextField
-                 autoComplete="off"
+                  autoComplete="off"
                   label="Keyword"
                   labelHidden
                   placeholder="Search discounts..."
@@ -243,10 +266,19 @@ const DiscountPageManage: NextPage = () => {
                   Apply
                 </Button>
               </div>
-              <div>
-                <Text as="span" variant="bodyMd">
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                <Text as="span" variant="bodyMd" fontWeight="semibold">
                   Total: {data.length}
                 </Text>
+                {lastUpdated && (
+                  <Text
+                    as="span"
+                    variant="bodySm"
+                    tone="subdued"
+                  >
+                    Last updated: {lastUpdated}
+                  </Text>
+                )}
               </div>
             </div>
 
