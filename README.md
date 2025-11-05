@@ -33,3 +33,6 @@ npm run dev
 ## 5. Ghi chú
 - Kiểm tra đúng url của fe, be, đúng app key
 - Đảm bảo backend đang chạy trước khi start frontend.
+
+
+npm install @shopify/polaris-icons@latest

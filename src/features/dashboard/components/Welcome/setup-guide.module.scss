@@ -1,0 +1,135 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 2.5rem 1.5rem;
+  background: #fafbfc;
+
+  .Polaris-Card {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.5rem; // ✅ nhỏ hơn (từ 2rem → 1.5rem)
+    font-weight: 500; // nhẹ hơn cho cảm giác tinh tế
+    color: #202223;
+    margin-bottom: 0.4rem;
+  }
+
+  p {
+    font-size: 0.95rem; // ✅ nhỏ hơn
+    color: #6d7175;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stepItem {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.6rem 1.8rem;
+  border: 1px solid #f1f2f3;
+  transition: all 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.stepInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+
+  h3 {
+    font-size: 1.1rem; // ✅ giảm size
+    font-weight: 500;
+    color: #202223;
+    margin-bottom: 0.3rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #4a4a4a;
+    line-height: 1.55;
+  }
+}
+
+.imageWrapper {
+  flex: 1.2;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.2rem;
+
+  img {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    object-fit: contain;
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: 2.5rem;
+
+  .Polaris-Button {
+    background: #6d7175;
+    color: #fff;
+    border: none;
+    font-size: 0.95rem; // ✅ gọn hơn
+    font-weight: 500;
+    padding: 0.8rem 1.6rem;
+    border-radius: 8px;
+    transition: background 0.25s ease;
+
+    &:hover {
+      background: #5c5f63;
+    }
+  }
+
+  p {
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    color: #6d7175;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 2rem 1rem;
+  }
+
+  .header h2 {
+    font-size: 1.3rem;
+  }
+
+  .stepItem {
+    padding: 1.3rem;
+  }
+
+  .imageWrapper img {
+    max-width: 100%;
+  }
+}
