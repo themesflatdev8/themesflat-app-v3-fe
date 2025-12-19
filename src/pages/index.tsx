@@ -17,7 +17,7 @@ const HomePage: NextPage = () => {
     <Container size="lg">
 
       <Page fullWidth title="Dashboard">
-                      <SyncDiscount />
+                      {/* <SyncDiscount /> */}
 
         <BlockStack gap="400">
           <Welcome></Welcome>
